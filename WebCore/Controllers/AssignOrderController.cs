@@ -21,14 +21,22 @@ namespace WebCore.Controllers
             return AssignOrderPost(deviceId, orderID, carNo, parkNo);
         }
 
+        //[HttpPost]
+        //public ActionResult<string> Post(string deviceId, string orderID, string carNo, string parkNo)
+        //{
+        //    return AssignOrderPost(deviceId, orderID, carNo, parkNo);
+        //}
+
+
         [HttpPost]
-        public ActionResult<string> Post(string deviceId, string orderID, string carNo, string parkNo)
+        public ActionResult<string> Post([FromBody]Assign assign)
         {
-            return AssignOrderPost(deviceId, orderID, carNo, parkNo);
+            return AssignOrderPost(assign.deviceId, assign.orderID, assign.carNo, assign.parkNo);
         }
 
         private string AssignOrderPost(string deviceId, string orderID, string carNo, string parkNo)
         {
+            Console.WriteLine("go on");
             string errMess = "";
             if (deviceId.Trim() == "")
             {
@@ -60,8 +68,19 @@ namespace WebCore.Controllers
             if (errMess != "")
                 return errMess;
 
-            Core.Core.InitToken();
+            //Core.Core.InitToken();
             return $"收到Get订单{orderID}处理结果:" + Core.Core.PlaceOrder(deviceId, orderID, carNo, parkNo);
         }
+    }
+
+    public class Assign
+    {
+        public string deviceId { get; set; }
+
+        public string orderID { get; set; }
+
+        public string carNo { get; set; }
+
+        public string parkNo { get; set; }
     }
 }

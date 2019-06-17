@@ -26,7 +26,7 @@ namespace WebCore.Controllers
             if (errMess != "")
                 return errMess;
 
-            Core.Core.InitToken();
+            //Core.Core.InitToken();
             return $"CancelOrder 收到订单{orderID}处理结果:" + Core.Core.CancelOrder(deviceId, orderID);
         }
     }
