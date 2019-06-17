@@ -19,7 +19,8 @@ namespace WebCore
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .UseUrls("http://*:8843;https://*:8848");
 
         //.UseUrls("http://*:8843;https://*:8848");
     }
