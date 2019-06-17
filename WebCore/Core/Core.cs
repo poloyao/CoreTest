@@ -47,11 +47,14 @@ namespace WebCore.Core
 
         private static bool CheckToken()
         {
+            if (TxtToken == null)
+                return false;
             return true;
         }
 
         private static void ResetToken()
         {
+            InitToken();
         }
 
         //PLACE_ORDER
@@ -69,6 +72,70 @@ namespace WebCore.Core
             lsCmdPars.Add(new CommandPara() { isNum = false, paraName = "parkNo", paraValue = parkNo });
 
             string result = currsdk.sendCommand(TxtToken, deviceId, CALLBACK_URL, SERVICEID, PLACE_ORDER, lsCmdPars);
+            if (result == null)
+            {
+                Console.WriteLine("获取失败，请看日志");
+                return "获取失败，请看日志";
+            }
+            Console.WriteLine("PlaceOrder:" + result);
+            return result;
+        }
+
+        public static string CancelOrder(string deviceId, string orderID)
+        {
+            if (!CheckToken())
+            {
+                ResetToken();
+            }
+
+            List<CommandPara> lsCmdPars = new List<CommandPara>();
+
+            lsCmdPars.Add(new CommandPara() { isNum = false, paraName = "orderID", paraValue = orderID });
+
+            string result = currsdk.sendCommand(TxtToken, deviceId, CALLBACK_URL, SERVICEID, CANCEL_ORDER, lsCmdPars);
+            if (result == null)
+            {
+                Console.WriteLine("获取失败，请看日志");
+                return "获取失败，请看日志";
+            }
+            Console.WriteLine(result);
+            return result;
+        }
+
+        public static string QueryInfo(string deviceId, string state)
+        {
+            if (!CheckToken())
+            {
+                ResetToken();
+            }
+
+            List<CommandPara> lsCmdPars = new List<CommandPara>();
+
+            lsCmdPars.Add(new CommandPara() { isNum = false, paraName = "State", paraValue = state });
+
+            string result = currsdk.sendCommand(TxtToken, deviceId, CALLBACK_URL, SERVICEID, QUERY_INFO, lsCmdPars);
+            if (result == null)
+            {
+                Console.WriteLine("获取失败，请看日志");
+                return "获取失败，请看日志";
+            }
+            Console.WriteLine(result);
+            return result;
+        }
+
+        public static string ForcedOrder(string deviceId, string orderID, string check_order)
+        {
+            if (!CheckToken())
+            {
+                ResetToken();
+            }
+
+            List<CommandPara> lsCmdPars = new List<CommandPara>();
+
+            lsCmdPars.Add(new CommandPara() { isNum = false, paraName = "orderID", paraValue = orderID });
+            lsCmdPars.Add(new CommandPara() { isNum = false, paraName = "Check_order", paraValue = check_order });
+
+            string result = currsdk.sendCommand(TxtToken, deviceId, CALLBACK_URL, SERVICEID, FORCED_END, lsCmdPars);
             if (result == null)
             {
                 Console.WriteLine("获取失败，请看日志");
