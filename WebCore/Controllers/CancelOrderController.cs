@@ -11,23 +11,40 @@ namespace WebCore.Controllers
     [ApiController]
     public class CancelOrderController : ControllerBase
     {
-        public ActionResult<string> Post(string deviceId, string orderID)
+        [HttpPost]
+        public ActionResult<string> Post([FromBody] Assign assign)
         {
             string errMess = "";
-            if (deviceId.Trim() == "")
+            if (assign.deviceId.Trim() == "")
             {
                 errMess += "deviceId不完整";
             }
-            if (orderID.Length != 22)
+            if (assign.orderID.Length != 22)
             {
                 errMess += "orderID 不完整";
             }
-
+            AssignResult r = new AssignResult();
             if (errMess != "")
-                return errMess;
+            {
+                r.code = 400;
+                r.Des = errMess;
+                //r.Des = System.Web.HttpUtility.UrlEncode(r.Des, System.Text.Encoding.GetEncoding("UTF-8"));
+                return Ok(r);
+            }
 
-            //Core.Core.InitToken();
-            return $"CancelOrder 收到订单{orderID}处理结果:" + Core.Core.CancelOrder(deviceId, orderID);
+            var result = Core.Core.CancelOrder(assign.deviceId, assign.orderID);
+
+            if (result == "201")
+                r.code = 200;
+            else
+            {
+                r.code = 400;
+                r.Des = result;
+            }
+
+            return Ok(r);
+
+            //return $"CancelOrder 收到订单{assign.orderID}处理结果:" + Core.Core.CancelOrder(assign.deviceId, assign.orderID);
         }
     }
 }

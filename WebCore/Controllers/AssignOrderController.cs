@@ -18,25 +18,23 @@ namespace WebCore.Controllers
         [HttpGet]
         public ActionResult<string> Get(string deviceId, string orderID, string carNo, string parkNo)
         {
-            return AssignOrderPost(deviceId, orderID, carNo, parkNo);
+            //var aop = AssignOrderPost(deviceId, orderID, carNo, parkNo);
+            //return Ok(aop);
+
+            return "get error";
         }
-
-        //[HttpPost]
-        //public ActionResult<string> Post(string deviceId, string orderID, string carNo, string parkNo)
-        //{
-        //    return AssignOrderPost(deviceId, orderID, carNo, parkNo);
-        //}
-
 
         [HttpPost]
         public ActionResult<string> Post([FromBody]Assign assign)
         {
-            return AssignOrderPost(assign.deviceId, assign.orderID, assign.carNo, assign.parkNo);
+            //Console.WriteLine($"{DateTime.Now.ToString("hh:mm:ss,fff")}  AssignOrder:" + assign.deviceId + "---" + assign.orderID);
+
+            var aop = AssignOrderPost(assign.deviceId, assign.orderID, assign.carNo, assign.parkNo);
+            return Ok(aop);
         }
 
-        private string AssignOrderPost(string deviceId, string orderID, string carNo, string parkNo)
+        private AssignResult AssignOrderPost(string deviceId, string orderID, string carNo, string parkNo)
         {
-            Console.WriteLine("go on");
             string errMess = "";
             if (deviceId.Trim() == "")
             {
@@ -46,7 +44,6 @@ namespace WebCore.Controllers
             {
                 errMess += "orderID 不完整";
             }
-
             if (carNo.Trim() == "" && ZHHelper.CheckZhLength(carNo) > 20)
             {
                 errMess += "carNo 长度异常";
@@ -55,7 +52,6 @@ namespace WebCore.Controllers
             {
                 carNo = ZHHelper.ZH_Fill(carNo, 20);
             }
-
             if (parkNo.Trim() == "" && ZHHelper.CheckZhLength(parkNo) > 50)
             {
                 errMess += "parkNo 长度异常";
@@ -64,13 +60,30 @@ namespace WebCore.Controllers
             {
                 parkNo = ZHHelper.ZH_Fill(parkNo, 50);
             }
-
+            AssignResult r = new AssignResult();
             if (errMess != "")
-                return errMess;
+            {
+                r.code = 400;
+                r.Des = errMess;
+                return r;
+            }
+            var asss = Core.Core.PlaceOrder(deviceId, orderID, carNo, parkNo);
 
-            //Core.Core.InitToken();
-            return $"收到Get订单{orderID}处理结果:" + Core.Core.PlaceOrder(deviceId, orderID, carNo, parkNo);
+            if (asss == "201")
+                r.code = 200;
+            else
+            {
+                r.code = 400;
+                r.Des = asss;
+            }
+            return r;
         }
+    }
+
+    public class AssignResult
+    {
+        public int code { get; set; }
+        public string Des { get; set; }
     }
 
     public class Assign

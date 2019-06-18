@@ -20,7 +20,7 @@ namespace WebCore.Core
         private static readonly string PLACE_ORDER = "PLACE_ORDER";
         private static readonly string CANCEL_ORDER = "CANCEL_ORDER";
         private static readonly string QUERY_INFO = "QUERY_INFO";
-        private static readonly string FORCED_END = "FORCED_END ";
+        private static readonly string FORCED_END = "FORCED_END";
 
         private static readonly string SERVICEID = "SteamCarWash";
 
@@ -60,10 +60,12 @@ namespace WebCore.Core
         //PLACE_ORDER
         public static string PlaceOrder(string deviceId, string orderID, string carNo, string parkNo)
         {
-            if (!CheckToken())
-            {
-                ResetToken();
-            }
+            SetAssigning(deviceId, orderID, carNo, parkNo);
+            //if (!CheckToken())
+            //{
+            //    ResetToken();
+            //}
+            InitToken();
 
             List<CommandPara> lsCmdPars = new List<CommandPara>();
 
@@ -77,7 +79,7 @@ namespace WebCore.Core
                 Console.WriteLine("获取失败，请看日志");
                 return "获取失败，请看日志";
             }
-            Console.WriteLine("PlaceOrder:" + result);
+            Console.WriteLine($"{DateTime.Now.ToString("hh:mm;ss,fff")} PlaceOrder:{orderID} " + result);
             return result;
         }
 
@@ -98,7 +100,7 @@ namespace WebCore.Core
                 Console.WriteLine("获取失败，请看日志");
                 return "获取失败，请看日志";
             }
-            Console.WriteLine(result);
+            Console.WriteLine($"{DateTime.Now.ToString("hh:mm:ss,fff")} CancelOrder:{orderID} " + result);
             return result;
         }
 
@@ -111,7 +113,7 @@ namespace WebCore.Core
 
             List<CommandPara> lsCmdPars = new List<CommandPara>();
 
-            lsCmdPars.Add(new CommandPara() { isNum = false, paraName = "State", paraValue = state });
+            lsCmdPars.Add(new CommandPara() { isNum = true, paraName = "State", paraValue = state });
 
             string result = currsdk.sendCommand(TxtToken, deviceId, CALLBACK_URL, SERVICEID, QUERY_INFO, lsCmdPars);
             if (result == null)
@@ -119,7 +121,7 @@ namespace WebCore.Core
                 Console.WriteLine("获取失败，请看日志");
                 return "获取失败，请看日志";
             }
-            Console.WriteLine(result);
+            Console.WriteLine($"{DateTime.Now.ToString("hh:mm;ss,fff")} QueryInfo:{result}");
             return result;
         }
 
@@ -133,16 +135,42 @@ namespace WebCore.Core
             List<CommandPara> lsCmdPars = new List<CommandPara>();
 
             lsCmdPars.Add(new CommandPara() { isNum = false, paraName = "orderID", paraValue = orderID });
-            lsCmdPars.Add(new CommandPara() { isNum = false, paraName = "Check_order", paraValue = check_order });
-
+            lsCmdPars.Add(new CommandPara() { isNum = true, paraName = "Check_order", paraValue = check_order });
+            //FORCED_END
             string result = currsdk.sendCommand(TxtToken, deviceId, CALLBACK_URL, SERVICEID, FORCED_END, lsCmdPars);
             if (result == null)
             {
                 Console.WriteLine("获取失败，请看日志");
                 return "获取失败，请看日志";
             }
-            Console.WriteLine(result);
+            Console.WriteLine($"{DateTime.Now.ToString("hh:mm;ss,fff")} ForcedOrder:{result}");
             return result;
+        }
+
+        /// <summary>
+        /// 等待指派
+        /// </summary>
+        private void SetWaitAssign()
+        {
+        }
+
+        /// <summary>
+        /// 指派中
+        /// 等待服务返回消息送达标识
+        /// 30秒未确认或拒绝订单这发送取消此设备订单
+        /// </summary>
+        private static void SetAssigning(string deviceId, string orderID, string carNo, string parkNo)
+        {
+            Task task = new TaskFactory().StartNew(() => { });
+        }
+
+        /// <summary>
+        /// 消息送达
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <param name="orderID"></param>
+        public static void SetMessageArrivals(string deviceId, string orderID)
+        {
         }
     }
 }

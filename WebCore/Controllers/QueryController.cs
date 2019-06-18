@@ -11,19 +11,33 @@ namespace WebCore.Controllers
     [ApiController]
     public class QueryController : ControllerBase
     {
-        public ActionResult<string> Post(string deviceId, string state)
+        [HttpPost]
+        public ActionResult<string> Post([FromBody] Assign assign)
         {
             string errMess = "";
-            if (deviceId.Trim() == "")
+            if (assign.deviceId.Trim() == "")
             {
                 errMess += "deviceId不完整";
             }
-
+            AssignResult r = new AssignResult();
             if (errMess != "")
-                return errMess;
+            {
+                r.code = 400;
+                r.Des = errMess;
+                return Ok(r);
+            }
 
-            Core.Core.InitToken();
-            return $" Query 处理结果:" + Core.Core.CancelOrder(deviceId, state);
+            var result = Core.Core.QueryInfo(assign.deviceId, "1");
+
+            if (result == "201")
+                r.code = 200;
+            else
+            {
+                r.code = 400;
+                r.Des = result;
+            }
+
+            return Ok(r);
         }
     }
 }

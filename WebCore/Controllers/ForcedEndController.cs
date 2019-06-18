@@ -11,28 +11,42 @@ namespace WebCore.Controllers
     [ApiController]
     public class ForcedEndController : ControllerBase
     {
-        public ActionResult<string> Post(string deviceId, string orderID, string check_order)
+        [HttpPost]
+        public ActionResult<string> Post([FromBody] Assign assign)
         {
             string errMess = "";
-            if (deviceId.Trim() == "")
+            if (assign.deviceId.Trim() == "")
             {
                 errMess += "deviceId不完整";
             }
-            if (orderID.Length != 22)
+            if (assign.orderID.Length != 22)
             {
                 errMess += "orderID 不完整";
             }
 
-            if (check_order == "")
+            //if (check_order == "")
+            //{
+            //    errMess += "check_order 不完整";
+            //}
+            AssignResult r = new AssignResult();
+            if (errMess != "")
             {
-                errMess += "check_order 不完整";
+                r.code = 400;
+                r.Des = errMess;
+                return Ok(r);
             }
 
-            if (errMess != "")
-                return errMess;
+            var result = Core.Core.ForcedOrder(assign.deviceId, assign.orderID, "1");
 
-            Core.Core.InitToken();
-            return $"ForcedEnd 收到订单{orderID}处理结果:" + Core.Core.ForcedOrder(deviceId, orderID, check_order);
+            if (result == "201")
+                r.code = 200;
+            else
+            {
+                r.code = 400;
+                r.Des = result;
+            }
+
+            return Ok(r);
         }
     }
 }
