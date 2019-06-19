@@ -4,9 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebCore.Model;
 
 namespace WebCore.Controllers
 {
+    /// <summary>
+    /// 取消订单
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class CancelOrderController : ControllerBase

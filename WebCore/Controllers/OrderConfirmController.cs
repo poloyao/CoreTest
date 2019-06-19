@@ -4,9 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebCore.Model;
 
 namespace WebCore.Controllers
 {
+    /// <summary>
+    /// 订单确认/拒单
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class OrderConfirmController : ControllerBase
@@ -15,18 +19,10 @@ namespace WebCore.Controllers
         public ActionResult<string> Post([FromBody] OrderConfirm order)
         {
             Console.WriteLine("order confirm");
+            Core.Core.GetOrderConfirm(order);
             AssignResult r = new AssignResult();
             r.code = 200;
             return Ok(r);
         }
-    }
-
-    public class OrderConfirm
-    {
-        public string deviceId { get; set; }
-
-        public string orderID { get; set; }
-
-        public int isConfirm { get; set; }
     }
 }

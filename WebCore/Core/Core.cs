@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using WebCore.Model;
 
 namespace WebCore.Core
 {
@@ -159,9 +160,18 @@ namespace WebCore.Core
         /// 等待服务返回消息送达标识
         /// 30秒未确认或拒绝订单这发送取消此设备订单
         /// </summary>
-        private static void SetAssigning(string deviceId, string orderID, string carNo, string parkNo)
+        public static void SetAssigning(string deviceId, string orderID, string carNo, string parkNo)
         {
-            Task task = new TaskFactory().StartNew(() => { });
+            Task task = new TaskFactory().StartNew(() =>
+            {
+                ///
+                ///1.等待消息送达
+                /// N 秒后如果未收到响应数据则再次发送,
+                /// M 秒后如果再次未收到,则发送取消命令,并向服务器汇报
+                ///2.等到按钮响应
+                /// N 秒后如未收到响应数据,则发送取消命令,并向服务器汇报
+                ///
+            });
         }
 
         /// <summary>
@@ -170,6 +180,17 @@ namespace WebCore.Core
         /// <param name="deviceId"></param>
         /// <param name="orderID"></param>
         public static void SetMessageArrivals(string deviceId, string orderID)
+        {
+            //do something
+        }
+
+        /// <summary>
+        /// 接收到订单确认/拒单
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <param name="orderID"></param>
+        /// <param name="isConfirm"></param>
+        public static void GetOrderConfirm(OrderConfirm orderConf)
         {
         }
     }

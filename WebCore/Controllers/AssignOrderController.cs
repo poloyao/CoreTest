@@ -7,9 +7,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebCore.Helper;
+using WebCore.Model;
 
 namespace WebCore.Controllers
 {
+    /// <summary>
+    /// 下单,派单
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AssignOrderController : ControllerBase
@@ -78,22 +82,5 @@ namespace WebCore.Controllers
             }
             return r;
         }
-    }
-
-    public class AssignResult
-    {
-        public int code { get; set; }
-        public string Des { get; set; }
-    }
-
-    public class Assign
-    {
-        public string deviceId { get; set; }
-
-        public string orderID { get; set; }
-
-        public string carNo { get; set; }
-
-        public string parkNo { get; set; }
     }
 }
