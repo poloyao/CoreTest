@@ -14,6 +14,7 @@ namespace WebCore.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+            Console.WriteLine("中文");
             return new string[] { "中文", "value2" };
         }
 
