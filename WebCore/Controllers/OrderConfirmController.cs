@@ -18,7 +18,7 @@ namespace WebCore.Controllers
         [HttpPost]
         public ActionResult<string> Post([FromBody] OrderConfirm order)
         {
-            Console.WriteLine("order confirm");
+            Console.WriteLine($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} order confirm:{order.orderID}");
             Core.Core.GetOrderConfirm(order);
             AssignResult r = new AssignResult();
             r.code = 200;

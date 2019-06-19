@@ -18,7 +18,7 @@ namespace WebCore.Controllers
         [HttpPost]
         public ActionResult<string> Post([FromBody] MessageArrivals mess)
         {
-            Console.WriteLine($"{DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:{mess.orderID}");
+            Console.WriteLine($"接收到消息送达 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:{mess.orderID}");
             Core.Core.SetMessageArrivals(mess.deviceId, mess.orderID);
             AssignResult r = new AssignResult();
             r.code = 200;

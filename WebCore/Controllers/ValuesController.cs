@@ -15,6 +15,8 @@ namespace WebCore.Controllers
         public ActionResult<IEnumerable<string>> Get()
         {
             Console.WriteLine("中文");
+            Console.WriteLine("中文1");
+            Console.WriteLine("中文2");
             Console.WriteLine("order confirm");
             return new string[] { "中文", "value2" };
         }

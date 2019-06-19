@@ -80,7 +80,7 @@ namespace WebCore.Core
                 Console.WriteLine("获取失败，请看日志");
                 return "获取失败，请看日志";
             }
-            Console.WriteLine($"{DateTime.Now.ToString("hh:mm;ss,fff")} PlaceOrder:{orderID} " + result);
+            Console.WriteLine($"下发订单命令 {DateTime.Now.ToString("hh:mm;ss,fff")} PlaceOrder:{orderID} " + result);
             return result;
         }
 
@@ -101,7 +101,7 @@ namespace WebCore.Core
                 Console.WriteLine("获取失败，请看日志");
                 return "获取失败，请看日志";
             }
-            Console.WriteLine($"{DateTime.Now.ToString("hh:mm:ss,fff")} CancelOrder:{orderID} " + result);
+            Console.WriteLine($"取消订单命令 {DateTime.Now.ToString("hh:mm:ss,fff")} CancelOrder:{orderID} " + result);
             return result;
         }
 
@@ -122,7 +122,7 @@ namespace WebCore.Core
                 Console.WriteLine("获取失败，请看日志");
                 return "获取失败，请看日志";
             }
-            Console.WriteLine($"{DateTime.Now.ToString("hh:mm;ss,fff")} QueryInfo:{result}");
+            Console.WriteLine($"设备查询命令 {DateTime.Now.ToString("hh:mm;ss,fff")} QueryInfo:{result}");
             return result;
         }
 
@@ -144,7 +144,7 @@ namespace WebCore.Core
                 Console.WriteLine("获取失败，请看日志");
                 return "获取失败，请看日志";
             }
-            Console.WriteLine($"{DateTime.Now.ToString("hh:mm;ss,fff")} ForcedOrder:{result}");
+            Console.WriteLine($"强制结单命令 {DateTime.Now.ToString("hh:mm;ss,fff")} ForcedOrder:{result}");
             return result;
         }
 
