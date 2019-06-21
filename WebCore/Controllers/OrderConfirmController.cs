@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebCore.Helper;
 using WebCore.Model;
 
 namespace WebCore.Controllers
@@ -18,7 +19,7 @@ namespace WebCore.Controllers
         [HttpPost]
         public ActionResult<string> Post([FromBody] OrderConfirm order)
         {
-            //Console.WriteLine($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} order confirm:{order.orderID}");
+            //ZHHelper.ConsoleOut($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} order confirm:{order.orderID}");
             //Core.Core.GetOrderConfirm(order);
             //AssignResult r = new AssignResult();
             //r.code = 200;
@@ -30,24 +31,24 @@ namespace WebCore.Controllers
             {
                 r.code = 200;
                 r.Des = "传入的数据异常";
-                Console.WriteLine($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:code:{r.code} Des:{r.code}");
+                ZHHelper.ConsoleOut($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:code:{r.code} Des:{r.code}");
             }
             else if (order.deviceId == null || order.deviceId == "")
             {
                 r.code = 200;
                 r.Des = "传入的deviceId数据异常";
-                Console.WriteLine($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:code:{r.code} Des:{r.code}");
+                ZHHelper.ConsoleOut($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:code:{r.code} Des:{r.code}");
             }
             else if (order.orderID == null || order.orderID == "")
             {
                 r.code = 200;
                 r.Des = "传入的orderID数据异常";
-                Console.WriteLine($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:code:{r.code} Des:{r.code}");
+                ZHHelper.ConsoleOut($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:code:{r.code} Des:{r.code}");
             }
             else
             {
                 r.code = 200;
-                Console.WriteLine($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:{order.orderID}");
+                ZHHelper.ConsoleOut($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:{order.orderID}");
                 Core.Core.DeleteOrderConfirm(order.deviceId, order.orderID);
             }
             return Ok(r);

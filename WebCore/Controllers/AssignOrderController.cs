@@ -86,9 +86,10 @@ namespace WebCore.Controllers
             }
             else
             {
-                Console.WriteLine($"当前设备已再下发订单列表中{deviceId},orderID:{orderID}");
+                // ZHHelper.ConsoleOut($"AssignOrderPost 当前设备已再下发订单列表中{deviceId},orderID:{orderID}");
+                Console.WriteLine($"AssignOrderPost list existed {deviceId},orderID:{orderID}");
                 r.code = 400;
-                r.Des = $"当前设备已再下发订单列表中{deviceId},orderID:{orderID}";
+                r.Des = $"当前设备已在下发订单列表中{deviceId},orderID:{orderID}";
             }
             return r;
         }

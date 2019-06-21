@@ -10,6 +10,7 @@ using System.Net.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WebCore.Helper;
 using WebCore.Model;
 
 namespace WebCore.Core
@@ -84,10 +85,25 @@ namespace WebCore.Core
             string result = currsdk.sendCommand(TxtToken, deviceId, CALLBACK_URL, SERVICEID, PLACE_ORDER, lsCmdPars);
             if (result == null)
             {
-                Console.WriteLine("PlaceOrder 获取失败，请看日志");
+                ZHHelper.ConsoleOut("PlaceOrder 获取失败，请看日志");
+
+                //不回信息则视为设备异常
+                //发送取消命令
+                CancelOrder(deviceId, orderID);
+                //发送电量查询
+
+                //向服务器发送设备异常通知
+                var url = "https://www.chupiao.xyz/api/Servermessage/fail_deivce";
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("deviceid", deviceId);
+                dic.Add("order_number", orderID);
+                var res = Helper.HttpClientHelper.PostResponse(url, dic);
+                Console.WriteLine($"设备异常 fail_deivce:{res}");
+
                 return "获取失败，请看日志";
             }
-            Console.WriteLine($"下发订单命令 {DateTime.Now.ToString("hh:mm;ss,fff")} " + result);
+            Console.WriteLine("-----PlaceOrder-----");
+            ZHHelper.ConsoleOut($"下发订单命令 {DateTime.Now.ToString("hh:mm;ss,fff")} " + result);
             Console.WriteLine($"deviceId:{deviceId}");
             Console.WriteLine($"orderID:{orderID}");
             Console.WriteLine("---------------" + System.Environment.NewLine);
@@ -109,10 +125,11 @@ namespace WebCore.Core
             string result = currsdk.sendCommand(TxtToken, deviceId, CALLBACK_URL, SERVICEID, CANCEL_ORDER, lsCmdPars);
             if (result == null)
             {
-                Console.WriteLine("CancelOrder 获取失败，请看日志");
+                ZHHelper.ConsoleOut("CancelOrder 获取失败，请看日志");
                 return "获取失败，请看日志";
             }
-            Console.WriteLine($"取消订单命令 {DateTime.Now.ToString("hh:mm:ss,fff")} " + result);
+            Console.WriteLine("-----CancelOrder-----");
+            ZHHelper.ConsoleOut($"取消订单命令 {DateTime.Now.ToString("hh:mm:ss,fff")} " + result);
             Console.WriteLine($"deviceId:{deviceId}");
             Console.WriteLine($"orderID:{orderID}");
             Console.WriteLine("---------------" + System.Environment.NewLine);
@@ -133,10 +150,13 @@ namespace WebCore.Core
             string result = currsdk.sendCommand(TxtToken, deviceId, CALLBACK_URL, SERVICEID, QUERY_INFO, lsCmdPars);
             if (result == null)
             {
-                Console.WriteLine("QueryInfo 获取失败，请看日志");
+                ZHHelper.ConsoleOut("QueryInfo 获取失败，请看日志");
                 return "获取失败，请看日志";
             }
-            Console.WriteLine($"设备查询命令 {DateTime.Now.ToString("hh:mm;ss,fff")} {System.Environment.NewLine} QueryInfo:{result}");
+            Console.WriteLine("-----QueryInfo-----");
+            ZHHelper.ConsoleOut($"设备查询命令 {DateTime.Now.ToString("hh:mm:ss,fff")} " + result);
+            Console.WriteLine($"deviceId:{deviceId}");
+            Console.WriteLine("---------------" + System.Environment.NewLine);
             return result;
         }
 
@@ -147,6 +167,7 @@ namespace WebCore.Core
                 ResetToken();
             }
 
+            DeleteOrderConfirm(deviceId, orderID);
             List<CommandPara> lsCmdPars = new List<CommandPara>();
 
             lsCmdPars.Add(new CommandPara() { isNum = false, paraName = "orderID", paraValue = orderID });
@@ -155,10 +176,14 @@ namespace WebCore.Core
             string result = currsdk.sendCommand(TxtToken, deviceId, CALLBACK_URL, SERVICEID, FORCED_END, lsCmdPars);
             if (result == null)
             {
-                Console.WriteLine("ForcedOrder 获取失败，请看日志");
+                ZHHelper.ConsoleOut("ForcedOrder 获取失败，请看日志");
                 return "获取失败，请看日志";
             }
-            Console.WriteLine($"强制结单命令 {DateTime.Now.ToString("hh:mm;ss,fff")} {System.Environment.NewLine} ForcedOrder:{result}");
+            Console.WriteLine("-----ForcedOrder-----");
+            ZHHelper.ConsoleOut($"强制结单命令 {DateTime.Now.ToString("hh:mm:ss,fff")} " + result);
+            Console.WriteLine($"deviceId:{deviceId}");
+            Console.WriteLine($"orderID:{orderID}");
+            Console.WriteLine("---------------" + System.Environment.NewLine);
             return result;
         }
 
@@ -200,18 +225,16 @@ namespace WebCore.Core
                         {
                             //告知后推出循环
                             {
-                                var url = "https://www.chupiao.xyz/api/Servermessage";
+                                //var url = "http://www.chupiao.xyz/api/Servermessage";
+
+                                var url = "http://www.chupiao.xyz/api/Servermessage";
                                 Dictionary<string, string> dic = new Dictionary<string, string>();
-                                //dic.Add("deviceid", "e33aa4cc-f96a-4ec3-a3bd-a126a5be54a5");
-                                //dic.Add("order_number", "TPYDSD2019062048549750");
                                 dic.Add("deviceid", deviceId);
                                 dic.Add("order_number", orderID);
-                                //var res = HttpPost(url, dic, Encoding.UTF8);
-                                //Console.WriteLine(res);
                                 var res = Helper.HttpClientHelper.PostResponse(url, dic);
                                 Console.WriteLine(res);
                             }
-                            Console.WriteLine($"{DateTime.Now.ToString("hh:mm:ss,fff")}告知后推出循环");
+                            ZHHelper.ConsoleOut($"{DateTime.Now.ToString("hh:mm:ss,fff")} while 告知后推出循环");
                             sw.Restart();
                         }
                     }
@@ -347,11 +370,13 @@ namespace WebCore.Core
             if (OrderConf.Where(x => x.Key == deviceId).Count() > 0)
             {
                 OrderConf.Remove(deviceId);
-                Console.WriteLine($"订单确认列表将订单移除:{deviceId} ");
+                Console.WriteLine($"-----DeleteOrderConfirm------{deviceId}");
+                //ZHHelper.ConsoleOut($"订单确认列表将订单移除:{deviceId} ");
             }
             else
             {
-                Console.WriteLine($"未查询到订单确认列表的设备{deviceId},执行移除操作无效");
+                Console.WriteLine(@"-----DeleteOrderConfirm--null----{deviceId}");
+                //ZHHelper.ConsoleOut($"未查询到订单确认列表的设备{deviceId},执行移除操作无效");
             }
         }
 
