@@ -18,11 +18,36 @@ namespace WebCore.Controllers
         [HttpPost]
         public ActionResult<string> Post([FromBody] MessageArrivals mess)
         {
-            Console.WriteLine($"接收到消息送达 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:{mess.orderID}");
-            Core.Core.SetMessageArrivals(mess.deviceId, mess.orderID);
+            //Console.WriteLine($"接收到消息送达 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:{mess.orderID}");
+            //Core.Core.SetMessageArrivals(mess.deviceId, mess.orderID);
+
             AssignResult r = new AssignResult();
-            r.code = 200;
-            r.Des = "MessageArrivals ok";
+
+            if (mess == null)
+            {
+                r.code = 200;
+                r.Des = "传入的数据异常";
+                Console.WriteLine($"接收到消息送达 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:code:{r.code} Des:{r.code}");
+            }
+            else if (mess.deviceId == null || mess.deviceId == "")
+            {
+                r.code = 200;
+                r.Des = "传入的deviceId数据异常";
+                Console.WriteLine($"接收到消息送达 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:code:{r.code} Des:{r.code}");
+            }
+            else if (mess.orderID == null || mess.orderID == "")
+            {
+                r.code = 200;
+                r.Des = "传入的orderID数据异常";
+                Console.WriteLine($"接收到消息送达 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:code:{r.code} Des:{r.code}");
+            }
+            else
+            {
+                r.code = 200;
+                r.Des = "MessageArrivals ok";
+                Console.WriteLine($"接收到消息送达 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:{mess.orderID}");
+                Core.Core.SetMessageArrivals(mess.deviceId, mess.orderID);
+            }
             return Ok(r);
         }
     }

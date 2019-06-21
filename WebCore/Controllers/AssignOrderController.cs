@@ -40,15 +40,15 @@ namespace WebCore.Controllers
         private AssignResult AssignOrderPost(string deviceId, string orderID, string carNo, string parkNo)
         {
             string errMess = "";
-            if (deviceId.Trim() == "")
+            if (deviceId == null && deviceId.Trim() == "")
             {
                 errMess += "deviceId不完整";
             }
-            if (orderID.Length != 22)
+            if (orderID == null && orderID.Length != 22)
             {
                 errMess += "orderID 不完整";
             }
-            if (carNo.Trim() == "" && ZHHelper.CheckZhLength(carNo) > 20)
+            if (carNo == null && carNo.Trim() == "" && ZHHelper.CheckZhLength(carNo) > 20)
             {
                 errMess += "carNo 长度异常";
             }
@@ -71,14 +71,24 @@ namespace WebCore.Controllers
                 r.Des = errMess;
                 return r;
             }
-            var asss = Core.Core.PlaceOrder(deviceId, orderID, carNo, parkNo);
-
-            if (asss == "201")
-                r.code = 200;
+            if (Core.Core.GetOrderConfirm(deviceId, orderID))
+            {
+                var asss = Core.Core.PlaceOrder(deviceId, orderID, carNo, parkNo);
+                if (asss == "201")
+                {
+                    r.code = 200;
+                }
+                else
+                {
+                    r.code = 400;
+                    r.Des = asss;
+                }
+            }
             else
             {
+                Console.WriteLine($"当前设备已再下发订单列表中{deviceId},orderID:{orderID}");
                 r.code = 400;
-                r.Des = asss;
+                r.Des = $"当前设备已再下发订单列表中{deviceId},orderID:{orderID}";
             }
             return r;
         }

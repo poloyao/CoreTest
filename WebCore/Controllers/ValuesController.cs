@@ -14,36 +14,9 @@ namespace WebCore.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            Console.WriteLine("中文");
-            Console.WriteLine("中文1");
-            Console.WriteLine("中文2");
-            Console.WriteLine("order confirm");
-            return new string[] { "中文", "value2" };
-        }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            Console.WriteLine("Version V1.0.0.1");
+            //Core.Core.SetAssigning("123", "456", "678", "901"); ;
+            return new string[] { "Version", "V1.0.0.1" };
         }
     }
 }

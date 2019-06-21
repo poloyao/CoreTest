@@ -44,6 +44,7 @@ namespace WebCore
 
             //app.UseHttpsRedirection();
             app.UseMvc();
+            //Core.Core.Heartbeat();
         }
     }
 }

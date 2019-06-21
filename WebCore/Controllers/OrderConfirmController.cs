@@ -18,10 +18,38 @@ namespace WebCore.Controllers
         [HttpPost]
         public ActionResult<string> Post([FromBody] OrderConfirm order)
         {
-            Console.WriteLine($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} order confirm:{order.orderID}");
-            Core.Core.GetOrderConfirm(order);
+            //Console.WriteLine($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} order confirm:{order.orderID}");
+            //Core.Core.GetOrderConfirm(order);
+            //AssignResult r = new AssignResult();
+            //r.code = 200;
+            //return Ok(r);
+
             AssignResult r = new AssignResult();
-            r.code = 200;
+
+            if (order == null)
+            {
+                r.code = 200;
+                r.Des = "传入的数据异常";
+                Console.WriteLine($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:code:{r.code} Des:{r.code}");
+            }
+            else if (order.deviceId == null || order.deviceId == "")
+            {
+                r.code = 200;
+                r.Des = "传入的deviceId数据异常";
+                Console.WriteLine($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:code:{r.code} Des:{r.code}");
+            }
+            else if (order.orderID == null || order.orderID == "")
+            {
+                r.code = 200;
+                r.Des = "传入的orderID数据异常";
+                Console.WriteLine($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:code:{r.code} Des:{r.code}");
+            }
+            else
+            {
+                r.code = 200;
+                Console.WriteLine($"接收到订单确认 {DateTime.Now.ToString("hh:mm:ss,fff")} message confirm:{order.orderID}");
+                Core.Core.DeleteOrderConfirm(order.deviceId, order.orderID);
+            }
             return Ok(r);
         }
     }

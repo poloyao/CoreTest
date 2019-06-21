@@ -19,11 +19,11 @@ namespace WebCore.Controllers
         public ActionResult<string> Post([FromBody] Assign assign)
         {
             string errMess = "";
-            if (assign.deviceId.Trim() == "")
+            if (assign.deviceId != null && assign.deviceId.Trim() == "")
             {
                 errMess += "deviceId不完整";
             }
-            if (assign.orderID.Length != 22)
+            if (assign.orderID != null && assign.orderID.Length != 22)
             {
                 errMess += "orderID 不完整";
             }
